@@ -7,15 +7,17 @@ import { useState } from "react";
 interface NomineeCardProps {
   nominee: Nominee;
   index: number;
+  onClick?: () => void;
 }
 
-export default function NomineeCard({ nominee, index }: NomineeCardProps) {
+export default function NomineeCard({ nominee, index, onClick }: NomineeCardProps) {
   const [imageError, setImageError] = useState(false);
 
   return (
     <div
-      className="relative group overflow-hidden rounded-xl card-glow bg-[#0a0a0a] transition-transform duration-300 hover:scale-105"
+      className="relative group overflow-hidden rounded-xl card-glow bg-[#0a0a0a] transition-transform duration-300 hover:scale-105 cursor-pointer"
       style={{ animationDelay: `${index * 50}ms` }}
+      onClick={onClick}
     >
       {/* Image Container */}
       <div className="relative aspect-[2/3] w-full overflow-hidden">

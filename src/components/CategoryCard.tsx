@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Category } from "@/data/nominees";
+import { Category, Nominee } from "@/data/nominees";
 import NomineeCard from "./NomineeCard";
+import NomineeModal from "./NomineeModal";
 
 interface CategoryCardProps {
   category: Category;
@@ -11,10 +12,11 @@ interface CategoryCardProps {
 
 export default function CategoryCard({ category, index }: CategoryCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedNominee, setSelectedNominee] = useState<Nominee | null>(null);
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl transition-all duration-500"
+      className="relative rounded-2xl transition-all duration-500"
       style={{ animationDelay: `${index * 100}ms` }}
     >
       {/* Gold gradient border */}
@@ -46,17 +48,31 @@ export default function CategoryCard({ category, index }: CategoryCardProps) {
           {/* Nominees Grid */}
           <div
             className={`transition-all duration-500 ease-in-out overflow-hidden ${
-              isExpanded ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+              isExpanded ? "max-h-[5000px] opacity-100" : "max-h-0 opacity-0"
             }`}
           >
             <div className="p-4 pt-0 grid grid-cols-2 gap-3">
               {category.nominees.map((nominee, idx) => (
-                <NomineeCard key={nominee.title} nominee={nominee} index={idx} />
+                <NomineeCard
+                  key={nominee.title}
+                  nominee={nominee}
+                  index={idx}
+                  onClick={() => setSelectedNominee(nominee)}
+                />
               ))}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Nominee Detail Modal */}
+      {selectedNominee && (
+        <NomineeModal
+          nominee={selectedNominee}
+          categoryName={category.name}
+          onClose={() => setSelectedNominee(null)}
+        />
+      )}
     </div>
   );
 }

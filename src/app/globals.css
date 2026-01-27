@@ -80,6 +80,15 @@
   animation: float 3s ease-in-out infinite;
 }
 
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.modal-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}
+
 body {
   background: linear-gradient(180deg, var(--black) 0%, var(--charcoal) 100%);
   min-height: 100vh;
