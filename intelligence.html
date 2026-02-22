@@ -546,6 +546,15 @@
     <div class="category-progress-fill" id="progressFill"></div>
   </div>
 
+  <!-- Fixed Next Button -->
+  <a href="#" class="fixed-next-btn" id="fixedNextBtn" onclick="goNext(); return false;" style="display: none;">
+    <div>
+      <span id="nextBtnLabel">Next</span>
+      <span class="category-name" id="nextBtnCategory">Directing</span>
+    </div>
+    <span class="arrow">→</span>
+  </a>
+
   <script>
     // All 23 Oscar Categories with nominees
     const categories = [
@@ -998,21 +1007,28 @@
             Viewing <strong>${cat.name}</strong> • Category ${cat.id} of 23
           </div>
         </div>
-
-        ${nextCat ? `<a href="#" class="fixed-next-btn" onclick="goToCategory(${currentCategory + 1}); return false;">
-          <div>
-            <span>Next</span>
-            <span class="category-name">${nextCat.name}</span>
-          </div>
-          <span class="arrow">→</span>
-        </a>` : `<a href="index.html" class="fixed-next-btn">
-          <div>
-            <span>Finish</span>
-            <span class="category-name">Back to Home</span>
-          </div>
-          <span class="arrow">🏠</span>
-        </a>`}
       `;
+
+      // Update fixed next button
+      const fixedBtn = document.getElementById('fixedNextBtn');
+      const nextLabel = document.getElementById('nextBtnLabel');
+      const nextCatName = document.getElementById('nextBtnCategory');
+
+      if (nextCat) {
+        fixedBtn.style.display = 'flex';
+        fixedBtn.href = '#';
+        fixedBtn.onclick = () => { goToCategory(currentCategory + 1); return false; };
+        nextLabel.textContent = 'Next';
+        nextCatName.textContent = nextCat.name;
+        fixedBtn.querySelector('.arrow').textContent = '→';
+      } else {
+        fixedBtn.style.display = 'flex';
+        fixedBtn.href = 'index.html';
+        fixedBtn.onclick = null;
+        nextLabel.textContent = 'Finish';
+        nextCatName.textContent = 'Back to Home';
+        fixedBtn.querySelector('.arrow').textContent = '🏠';
+      }
 
       // Initialize chart
       initChart(cat);
@@ -1063,6 +1079,12 @@
       currentCategory = index;
       updateView();
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goNext() {
+      if (currentCategory < categories.length - 1) {
+        goToCategory(currentCategory + 1);
+      }
     }
 
     // Initialize
