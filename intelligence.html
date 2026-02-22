@@ -440,6 +440,53 @@
       transition: width 0.5s ease;
     }
 
+    /* Fixed Next Button */
+    .fixed-next-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 50px;
+      border: 1px solid var(--gold);
+      background: rgba(10, 10, 10, 0.9);
+      color: var(--gold);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      z-index: 1001;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 30px rgba(212, 175, 55, 0.2);
+    }
+
+    .fixed-next-btn:hover {
+      background: rgba(212, 175, 55, 0.15);
+      box-shadow: 0 4px 40px rgba(212, 175, 55, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .fixed-next-btn .arrow {
+      font-size: 1rem;
+      transition: transform 0.3s ease;
+    }
+
+    .fixed-next-btn:hover .arrow {
+      transform: translateX(4px);
+    }
+
+    .fixed-next-btn .category-name {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 2px;
+    }
+
     /* Responsive */
     @media (max-width: 1200px) {
       .dashboard { grid-template-columns: 1fr; }
@@ -856,10 +903,6 @@
             <h1 class="category-title">${cat.name}</h1>
             <div class="category-subtitle">${cat.type.toUpperCase()} • ${cat.nominees.length} NOMINEES</div>
           </div>
-          <div class="category-nav">
-            ${prevCat ? `<a href="#" class="nav-btn" onclick="goToCategory(${currentCategory - 1}); return false;">← Previous</a>` : ''}
-            ${nextCat ? `<a href="#" class="nav-btn next" onclick="goToCategory(${currentCategory + 1}); return false;">Next →</a>` : `<a href="index.html" class="nav-btn next">Back to Home →</a>`}
-          </div>
         </div>
 
         <div class="stats-row">
@@ -954,11 +997,21 @@
           <div class="bottom-nav-info">
             Viewing <strong>${cat.name}</strong> • Category ${cat.id} of 23
           </div>
-          <div class="category-nav">
-            ${prevCat ? `<a href="#" class="nav-btn" onclick="goToCategory(${currentCategory - 1}); return false;">← ${prevCat.name}</a>` : ''}
-            ${nextCat ? `<a href="#" class="nav-btn next" onclick="goToCategory(${currentCategory + 1}); return false;">${nextCat.name} →</a>` : `<a href="index.html" class="nav-btn next">Back to Home →</a>`}
-          </div>
         </div>
+
+        ${nextCat ? `<a href="#" class="fixed-next-btn" onclick="goToCategory(${currentCategory + 1}); return false;">
+          <div>
+            <span>Next</span>
+            <span class="category-name">${nextCat.name}</span>
+          </div>
+          <span class="arrow">→</span>
+        </a>` : `<a href="index.html" class="fixed-next-btn">
+          <div>
+            <span>Finish</span>
+            <span class="category-name">Back to Home</span>
+          </div>
+          <span class="arrow">🏠</span>
+        </a>`}
       `;
 
       // Initialize chart
