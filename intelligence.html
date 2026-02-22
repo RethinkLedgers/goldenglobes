@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Awards Intelligence | Oscars</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #0f0f0f;
+      --bg-card: #141414;
+      --bg-hover: #1a1a1a;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-accent: rgba(212, 175, 55, 0.2);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.6);
+      --text-muted: rgba(255, 255, 255, 0.35);
+      --gold: #d4af37;
+      --gold-dim: rgba(212, 175, 55, 0.15);
+      --green: #22c55e;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --purple: #a855f7;
+    }
+
+    html {
+      font-size: 14px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+    ::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 3px; }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      z-index: 1000;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .nav-logo-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--gold) 0%, #8b7355 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+    }
+
+    .nav-logo-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+    }
+
+    .nav-section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-left: 2rem;
+      border-left: 1px solid var(--border);
+    }
+
+    .nav-section-title span {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .nav-live {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--gold);
+    }
+
+    /* Main Layout */
+    .dashboard {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+      padding-top: 60px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 0;
+      position: sticky;
+      top: 60px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+    }
+
+    .sidebar-section {
+      padding: 0 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .sidebar-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+    }
+
+    .sidebar-nav li a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar-nav li a:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .sidebar-nav li a.active {
+      background: var(--gold-dim);
+      color: var(--gold);
+    }
+
+    .sidebar-icon {
+      width: 16px;
+      height: 16px;
+      opacity: 0.6;
+    }
+
+    /* Main Content */
+    .main {
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+
+    /* Header Bar */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .header-title {
+      font-size: 1.5rem;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+    }
+
+    .header-title span {
+      color: var(--gold);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-accent);
+      color: var(--text-primary);
+    }
+
+    .btn-primary {
+      background: var(--gold-dim);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-value.gold { color: var(--gold); }
+    .stat-value.green { color: var(--green); }
+    .stat-value.blue { color: var(--blue); }
+
+    .stat-change {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .stat-change.up { color: var(--green); }
+    .stat-change.down { color: var(--red); }
+
+    /* Dashboard Grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: var(--border-accent);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    .card-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      padding: 0.25rem 0.5rem;
+      background: var(--gold-dim);
+      color: var(--gold);
+      border-radius: 4px;
+    }
+
+    .card-body {
+      padding: 1.25rem;
+    }
+
+    /* Span utilities */
+    .col-6 { grid-column: span 6; }
+    .col-4 { grid-column: span 4; }
+    .col-8 { grid-column: span 8; }
+    .col-3 { grid-column: span 3; }
+    .col-12 { grid-column: span 12; }
+
+    /* Leaderboard */
+    .leaderboard {
+      list-style: none;
+    }
+
+    .leaderboard-item {
+      display: grid;
+      grid-template-columns: 30px 1fr auto auto;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      transition: all 0.2s ease;
+    }
+
+    .leaderboard-item:last-child {
+      border-bottom: none;
+    }
+
+    .leaderboard-item:hover {
+      background: var(--bg-hover);
+      margin: 0 -1.25rem;
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+    }
+
+    .leaderboard-rank {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .leaderboard-rank.top-3 {
+      color: var(--gold);
+    }
+
+    .leaderboard-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .leaderboard-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .leaderboard-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .leaderboard-bar {
+      width: 100px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .leaderboard-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dim));
+      border-radius: 2px;
+      transition: width 1s ease;
+    }
+
+    .leaderboard-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: right;
+      min-width: 40px;
+    }
+
+    /* Mini Chart */
+    .mini-chart {
+      height: 60px;
+      margin-top: 0.5rem;
+    }
+
+    /* Tracker List */
+    .tracker-list {
+      list-style: none;
+    }
+
+    .tracker-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tracker-item:last-child {
+      border-bottom: none;
+    }
+
+    .tracker-name {
+      font-size: 0.85rem;
+    }
+
+    .tracker-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .tracker-category {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tracker-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      padding: 0.2rem 0.5rem;
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--green);
+      border-radius: 4px;
+    }
+
+    .tracker-badge.franchise {
+      background: rgba(168, 85, 247, 0.15);
+      color: var(--purple);
+    }
+
+    /* Volatility Meter */
+    .volatility-meter {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .volatility-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .volatility-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      min-width: 120px;
+    }
+
+    .volatility-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .volatility-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 1s ease;
+    }
+
+    .volatility-fill.high { background: linear-gradient(90deg, var(--red), #ff6b6b); }
+    .volatility-fill.medium { background: linear-gradient(90deg, var(--gold), #ffd700); }
+    .volatility-fill.low { background: linear-gradient(90deg, var(--green), #4ade80); }
+
+    .volatility-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      min-width: 40px;
+      text-align: right;
+    }
+
+    /* Comparison Table */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .comparison-table th {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .comparison-table td {
+      font-size: 0.8rem;
+    }
+
+    .comparison-table tr:hover td {
+      background: var(--bg-hover);
+    }
+
+    .film-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .film-poster {
+      width: 32px;
+      height: 48px;
+      background: var(--bg-secondary);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .film-poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .film-title {
+      font-weight: 500;
+    }
+
+    .film-studio {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .number-cell {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+    }
+
+    .ratio-good { color: var(--green); }
+    .ratio-bad { color: var(--red); }
+
+    /* Timeline */
+    .career-timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .career-timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--gold), var(--border));
+    }
+
+    .career-year {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .career-year::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 0.5rem;
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      transform: translateX(-3px);
+    }
+
+    .career-year-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--gold);
+      margin-bottom: 0.25rem;
+    }
+
+    .career-year-content {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .career-year-nom {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.4rem;
+      background: var(--gold-dim);
+      color: var(--gold);
+      border-radius: 3px;
+      margin-left: 0.5rem;
+    }
+
+    .career-year-win {
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--green);
+    }
+
+    /* Chart Container */
+    .chart-container {
+      position: relative;
+      height: 200px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+      .stats-bar { grid-template-columns: repeat(3, 1fr); }
+      .col-6 { grid-column: span 12; }
+      .col-4 { grid-column: span 6; }
+      .col-8 { grid-column: span 12; }
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .col-4 { grid-column: span 12; }
+      .col-3 { grid-column: span 6; }
+    }
+
+    @media (max-width: 768px) {
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+      .col-3 { grid-column: span 12; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-icon">&#9733;</div>
+        <span class="nav-logo-text">OSCARS</span>
+      </a>
+      <div class="nav-section-title">
+        <span>Awards Intelligence</span>
+      </div>
+    </div>
+    <div class="nav-live">
+      <span class="live-dot"></span>
+      <span>LIVE DATA</span>
+      <span style="margin-left: 0.5rem;">97TH SEASON</span>
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="network.html">Network</a>
+      <a href="intelligence.html" class="active">Intelligence</a>
+    </div>
+  </nav>
+
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Analytics</div>
+        <ul class="sidebar-nav">
+          <li><a href="#" class="active"><span>📊</span> Overview</a></li>
+          <li><a href="#"><span>🏆</span> Leaderboards</a></li>
+          <li><a href="#"><span>🎬</span> Studios</a></li>
+          <li><a href="#"><span>🎭</span> Talent</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Insights</div>
+        <ul class="sidebar-nav">
+          <li><a href="#"><span>📈</span> Trends</a></li>
+          <li><a href="#"><span>💰</span> Financial</a></li>
+          <li><a href="#"><span>📅</span> Historical</a></li>
+          <li><a href="#"><span>🔮</span> Predictions</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Tools</div>
+        <ul class="sidebar-nav">
+          <li><a href="#"><span>⚙️</span> Settings</a></li>
+          <li><a href="#"><span>📤</span> Export</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <div class="header-bar">
+        <h1 class="header-title">Awards <span>Intelligence</span></h1>
+        <div class="header-actions">
+          <button class="btn">Export Report</button>
+          <button class="btn btn-primary">+ Custom Query</button>
+        </div>
+      </div>
+
+      <!-- Stats Bar -->
+      <div class="stats-bar">
+        <div class="stat-card">
+          <div class="stat-label">Total Nominations</div>
+          <div class="stat-value gold">124</div>
+          <div class="stat-change up">↑ 8% vs last year</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">First-Time Nominees</div>
+          <div class="stat-value green">23</div>
+          <div class="stat-change up">↑ 15% vs avg</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Budget (Nominees)</div>
+          <div class="stat-value">$68M</div>
+          <div class="stat-change down">↓ 12% vs last year</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Competitive Index</div>
+          <div class="stat-value blue">8.4</div>
+          <div class="stat-change up">Highest since 2019</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Studio Diversity</div>
+          <div class="stat-value">12</div>
+          <div class="stat-change up">↑ 3 studios</div>
+        </div>
+      </div>
+
+      <!-- Dashboard Grid -->
+      <div class="dashboard-grid">
+        <!-- Nomination Leaderboard -->
+        <div class="card col-6">
+          <div class="card-header">
+            <span class="card-title">Nomination Leaderboard</span>
+            <span class="card-badge">97TH</span>
+          </div>
+          <div class="card-body">
+            <ul class="leaderboard">
+              <li class="leaderboard-item">
+                <span class="leaderboard-rank top-3">01</span>
+                <div class="leaderboard-info">
+                  <span class="leaderboard-name">Oppenheimer</span>
+                  <span class="leaderboard-sub">Universal Pictures</span>
+                </div>
+                <div class="leaderboard-bar"><div class="leaderboard-bar-fill" style="width: 100%"></div></div>
+                <span class="leaderboard-value">13</span>
+              </li>
+              <li class="leaderboard-item">
+                <span class="leaderboard-rank top-3">02</span>
+                <div class="leaderboard-info">
+                  <span class="leaderboard-name">Poor Things</span>
+                  <span class="leaderboard-sub">Searchlight Pictures</span>
+                </div>
+                <div class="leaderboard-bar"><div class="leaderboard-bar-fill" style="width: 84%"></div></div>
+                <span class="leaderboard-value">11</span>
+              </li>
+              <li class="leaderboard-item">
+                <span class="leaderboard-rank top-3">03</span>
+                <div class="leaderboard-info">
+                  <span class="leaderboard-name">Killers of the Flower Moon</span>
+                  <span class="leaderboard-sub">Apple Original Films</span>
+                </div>
+                <div class="leaderboard-bar"><div class="leaderboard-bar-fill" style="width: 76%"></div></div>
+                <span class="leaderboard-value">10</span>
+              </li>
+              <li class="leaderboard-item">
+                <span class="leaderboard-rank">04</span>
+                <div class="leaderboard-info">
+                  <span class="leaderboard-name">Barbie</span>
+                  <span class="leaderboard-sub">Warner Bros Pictures</span>
+                </div>
+                <div class="leaderboard-bar"><div class="leaderboard-bar-fill" style="width: 61%"></div></div>
+                <span class="leaderboard-value">8</span>
+              </li>
+              <li class="leaderboard-item">
+                <span class="leaderboard-rank">05</span>
+                <div class="leaderboard-info">
+                  <span class="leaderboard-name">Maestro</span>
+                  <span class="leaderboard-sub">Netflix</span>
+                </div>
+                <div class="leaderboard-bar"><div class="leaderboard-bar-fill" style="width: 53%"></div></div>
+                <span class="leaderboard-value">7</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Studio Dominance -->
+        <div class="card col-6">
+          <div class="card-header">
+            <span class="card-title">Studio Dominance Ranking</span>
+            <span class="card-badge">BY NOMINATIONS</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="studioChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- First Time Nominees -->
+        <div class="card col-4">
+          <div class="card-header">
+            <span class="card-title">First-Time Nominee Tracker</span>
+            <span class="card-badge">23 THIS YEAR</span>
+          </div>
+          <div class="card-body">
+            <ul class="tracker-list">
+              <li class="tracker-item">
+                <div>
+                  <div class="tracker-name">Lily Gladstone</div>
+                  <div class="tracker-category">Best Actress</div>
+                </div>
+                <span class="tracker-badge">FIRST NOM</span>
+              </li>
+              <li class="tracker-item">
+                <div>
+                  <div class="tracker-name">Colman Domingo</div>
+                  <div class="tracker-category">Best Actor</div>
+                </div>
+                <span class="tracker-badge">FIRST NOM</span>
+              </li>
+              <li class="tracker-item">
+                <div>
+                  <div class="tracker-name">America Ferrera</div>
+                  <div class="tracker-category">Supporting Actress</div>
+                </div>
+                <span class="tracker-badge">FIRST NOM</span>
+              </li>
+              <li class="tracker-item">
+                <div>
+                  <div class="tracker-name">Celine Song</div>
+                  <div class="tracker-category">Original Screenplay</div>
+                </div>
+                <span class="tracker-badge">FIRST NOM</span>
+              </li>
+              <li class="tracker-item">
+                <div>
+                  <div class="tracker-name">Mark Ruffalo</div>
+                  <div class="tracker-category">Supporting Actor</div>
+                </div>
+                <span class="tracker-badge" style="background: rgba(59, 130, 246, 0.15); color: var(--blue);">4TH NOM</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Category Competitiveness -->
+        <div class="card col-4">
+          <div class="card-header">
+            <span class="card-title">Competitive Category Score</span>
+            <span class="card-badge">ALGORITHM v2.1</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-container" style="height: 180px;">
+              <canvas id="competitiveChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Volatility Index -->
+        <div class="card col-4">
+          <div class="card-header">
+            <span class="card-title">Category Volatility Index</span>
+            <span class="card-badge">HISTORICAL</span>
+          </div>
+          <div class="card-body">
+            <div class="volatility-meter">
+              <div class="volatility-item">
+                <span class="volatility-label">Best Picture</span>
+                <div class="volatility-bar">
+                  <div class="volatility-fill high" style="width: 78%"></div>
+                </div>
+                <span class="volatility-value">78%</span>
+              </div>
+              <div class="volatility-item">
+                <span class="volatility-label">Best Director</span>
+                <div class="volatility-bar">
+                  <div class="volatility-fill medium" style="width: 52%"></div>
+                </div>
+                <span class="volatility-value">52%</span>
+              </div>
+              <div class="volatility-item">
+                <span class="volatility-label">Best Actor</span>
+                <div class="volatility-bar">
+                  <div class="volatility-fill low" style="width: 34%"></div>
+                </div>
+                <span class="volatility-value">34%</span>
+              </div>
+              <div class="volatility-item">
+                <span class="volatility-label">Best Actress</span>
+                <div class="volatility-bar">
+                  <div class="volatility-fill medium" style="width: 61%"></div>
+                </div>
+                <span class="volatility-value">61%</span>
+              </div>
+              <div class="volatility-item">
+                <span class="volatility-label">Visual Effects</span>
+                <div class="volatility-bar">
+                  <div class="volatility-fill high" style="width: 85%"></div>
+                </div>
+                <span class="volatility-value">85%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Budget vs Nominations -->
+        <div class="card col-8">
+          <div class="card-header">
+            <span class="card-title">Budget vs Nominations Comparison</span>
+            <span class="card-badge">ROI ANALYSIS</span>
+          </div>
+          <div class="card-body">
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th>Film</th>
+                  <th>Budget</th>
+                  <th>Box Office</th>
+                  <th>Noms</th>
+                  <th>$ Per Nom</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="film-cell">
+                      <div class="film-poster" style="background: linear-gradient(135deg, #ff6b35, #f7931e);"></div>
+                      <div>
+                        <div class="film-title">Oppenheimer</div>
+                        <div class="film-studio">Universal</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="number-cell">$100M</td>
+                  <td class="number-cell">$952M</td>
+                  <td class="number-cell">13</td>
+                  <td class="number-cell ratio-good">$7.7M</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="film-cell">
+                      <div class="film-poster" style="background: linear-gradient(135deg, #e91e63, #9c27b0);"></div>
+                      <div>
+                        <div class="film-title">Barbie</div>
+                        <div class="film-studio">Warner Bros</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="number-cell">$145M</td>
+                  <td class="number-cell">$1.44B</td>
+                  <td class="number-cell">8</td>
+                  <td class="number-cell">$18.1M</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="film-cell">
+                      <div class="film-poster" style="background: linear-gradient(135deg, #2196f3, #00bcd4);"></div>
+                      <div>
+                        <div class="film-title">Poor Things</div>
+                        <div class="film-studio">Searchlight</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="number-cell">$35M</td>
+                  <td class="number-cell">$112M</td>
+                  <td class="number-cell">11</td>
+                  <td class="number-cell ratio-good">$3.2M</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="film-cell">
+                      <div class="film-poster" style="background: linear-gradient(135deg, #8b4513, #d2691e);"></div>
+                      <div>
+                        <div class="film-title">Killers of the Flower Moon</div>
+                        <div class="film-studio">Apple</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="number-cell">$200M</td>
+                  <td class="number-cell">$208M</td>
+                  <td class="number-cell">10</td>
+                  <td class="number-cell ratio-bad">$20M</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Franchise Tracker -->
+        <div class="card col-4">
+          <div class="card-header">
+            <span class="card-title">Franchise Nomination Tracker</span>
+            <span class="card-badge">SERIES</span>
+          </div>
+          <div class="card-body">
+            <ul class="tracker-list">
+              <li class="tracker-item">
+                <div>
+                  <div class="tracker-name">Dune</div>
+                  <div class="tracker-category">Part One + Part Two</div>
+                </div>
+                <span class="tracker-badge franchise">18 TOTAL</span>
+              </li>
+              <li class="tracker-item">
+                <div>
+                  <div class="tracker-name">Top Gun</div>
+                  <div class="tracker-category">1986 + Maverick</div>
+                </div>
+                <span class="tracker-badge franchise">10 TOTAL</span>
+              </li>
+              <li class="tracker-item">
+                <div>
+                  <div class="tracker-name">Avatar</div>
+                  <div class="tracker-category">2009 + Way of Water</div>
+                </div>
+                <span class="tracker-badge franchise">15 TOTAL</span>
+              </li>
+              <li class="tracker-item">
+                <div>
+                  <div class="tracker-name">Marvel Cinematic</div>
+                  <div class="tracker-category">All Films</div>
+                </div>
+                <span class="tracker-badge franchise">23 TOTAL</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Director Trajectory -->
+        <div class="card col-4">
+          <div class="card-header">
+            <span class="card-title">Director Career Trajectory</span>
+            <span class="card-badge">CHRISTOPHER NOLAN</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-container" style="height: 160px;">
+              <canvas id="directorChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actor Timeline -->
+        <div class="card col-4">
+          <div class="card-header">
+            <span class="card-title">Actor Nomination Timeline</span>
+            <span class="card-badge">MERYL STREEP</span>
+          </div>
+          <div class="card-body">
+            <div class="career-timeline">
+              <div class="career-year">
+                <div class="career-year-label">2024</div>
+                <div class="career-year-content">Only Murders in the Building</div>
+              </div>
+              <div class="career-year">
+                <div class="career-year-label">2018</div>
+                <div class="career-year-content">The Post <span class="career-year-nom">21ST NOM</span></div>
+              </div>
+              <div class="career-year">
+                <div class="career-year-label">2012</div>
+                <div class="career-year-content">The Iron Lady <span class="career-year-nom career-year-win">WIN</span></div>
+              </div>
+              <div class="career-year">
+                <div class="career-year-label">1983</div>
+                <div class="career-year-content">Sophie's Choice <span class="career-year-nom career-year-win">WIN</span></div>
+              </div>
+              <div class="career-year">
+                <div class="career-year-label">1979</div>
+                <div class="career-year-content">The Deer Hunter <span class="career-year-nom">1ST NOM</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Studio Dominance Chart
+    const studioCtx = document.getElementById('studioChart').getContext('2d');
+    new Chart(studioCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Universal', 'Searchlight', 'Apple', 'Warner Bros', 'Netflix', 'A24', 'Others'],
+        datasets: [{
+          data: [24, 18, 15, 12, 10, 8, 37],
+          backgroundColor: [
+            'rgba(212, 175, 55, 0.8)',
+            'rgba(59, 130, 246, 0.7)',
+            'rgba(168, 85, 247, 0.7)',
+            'rgba(34, 197, 94, 0.7)',
+            'rgba(239, 68, 68, 0.7)',
+            'rgba(251, 146, 60, 0.7)',
+            'rgba(255, 255, 255, 0.1)'
+          ],
+          borderWidth: 0,
+          hoverOffset: 10
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '65%',
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              color: 'rgba(255,255,255,0.6)',
+              font: { size: 10, family: 'JetBrains Mono' },
+              padding: 15,
+              usePointStyle: true,
+              pointStyle: 'circle'
+            }
+          }
+        }
+      }
+    });
+
+    // Competitive Category Chart
+    const compCtx = document.getElementById('competitiveChart').getContext('2d');
+    new Chart(compCtx, {
+      type: 'radar',
+      data: {
+        labels: ['Picture', 'Director', 'Actor', 'Actress', 'Supporting', 'Screenplay'],
+        datasets: [{
+          label: '97th',
+          data: [9.2, 8.5, 7.8, 8.9, 9.1, 8.7],
+          backgroundColor: 'rgba(212, 175, 55, 0.2)',
+          borderColor: 'rgba(212, 175, 55, 0.8)',
+          borderWidth: 2,
+          pointBackgroundColor: '#d4af37',
+          pointRadius: 4
+        }, {
+          label: '96th',
+          data: [8.1, 7.9, 8.2, 7.5, 8.0, 8.3],
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          borderColor: 'rgba(255, 255, 255, 0.3)',
+          borderWidth: 1,
+          pointBackgroundColor: 'rgba(255,255,255,0.5)',
+          pointRadius: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 10,
+            ticks: { display: false },
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            angleLines: { color: 'rgba(255,255,255,0.05)' },
+            pointLabels: {
+              color: 'rgba(255,255,255,0.5)',
+              font: { size: 9, family: 'Inter' }
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: 'rgba(255,255,255,0.6)',
+              font: { size: 10, family: 'JetBrains Mono' }
+            }
+          }
+        }
+      }
+    });
+
+    // Director Trajectory Chart
+    const dirCtx = document.getElementById('directorChart').getContext('2d');
+    new Chart(dirCtx, {
+      type: 'line',
+      data: {
+        labels: ['1998', '2000', '2002', '2005', '2006', '2008', '2010', '2012', '2014', '2017', '2020', '2023'],
+        datasets: [{
+          label: 'Nominations',
+          data: [0, 0, 1, 4, 5, 8, 8, 8, 5, 8, 10, 13],
+          borderColor: '#d4af37',
+          backgroundColor: 'rgba(212, 175, 55, 0.1)',
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#d4af37',
+          pointRadius: 3,
+          pointHoverRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 8 } }
+          },
+          y: {
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 8 } }
+          }
+        },
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+
+    // Animate values on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.card').forEach((card, i) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = `all 0.6s ease ${i * 0.1}s`;
+      observer.observe(card);
+    });
+  </script>
+</body>
+</html>
