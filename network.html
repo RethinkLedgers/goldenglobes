@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Industry Network | Oscars</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+    }
+
+    .network-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background: radial-gradient(ellipse at center, #0f0f1a 0%, #0a0a0a 50%, #000000 100%);
+    }
+
+    /* Animated star background */
+    .stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle var(--duration) ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: var(--min-opacity); }
+      50% { opacity: var(--max-opacity); }
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    /* Header */
+    .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #d4af37 0%, #f4e4bc 50%, #d4af37 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: #d4af37;
+    }
+
+    .nav-links a.active {
+      color: #d4af37;
+    }
+
+    /* Title section */
+    .title-section {
+      position: absolute;
+      top: 100px;
+      left: 3rem;
+      z-index: 100;
+    }
+
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #ffffff 0%, #d4af37 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-subtitle {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 300;
+    }
+
+    /* Legend */
+    .legend {
+      position: absolute;
+      bottom: 2rem;
+      left: 3rem;
+      display: flex;
+      gap: 2rem;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .legend-dot.actor { background: #ffd700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+    .legend-dot.director { background: #00bfff; box-shadow: 0 0 10px rgba(0, 191, 255, 0.5); }
+    .legend-dot.producer { background: #ff6b6b; box-shadow: 0 0 10px rgba(255, 107, 107, 0.5); }
+    .legend-dot.studio { background: #a855f7; box-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
+    .legend-dot.winner { background: #4ade80; box-shadow: 0 0 10px rgba(74, 222, 128, 0.5); }
+
+    /* Tooltip */
+    .tooltip {
+      position: absolute;
+      background: rgba(15, 15, 25, 0.95);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 1000;
+      max-width: 300px;
+      backdrop-filter: blur(10px);
+      display: flex;
+      gap: 1rem;
+    }
+
+    .tooltip.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .tooltip-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid;
+      flex-shrink: 0;
+    }
+
+    .tooltip-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tooltip-name {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      color: #d4af37;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tooltip-type {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 0.75rem;
+    }
+
+    .tooltip-section {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .tooltip-section-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 0.5rem;
+    }
+
+    .tooltip-collab {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+    }
+
+    .tooltip-collab-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-collab-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    /* Controls */
+    .controls {
+      position: absolute;
+      bottom: 2rem;
+      right: 3rem;
+      display: flex;
+      gap: 0.75rem;
+      z-index: 100;
+    }
+
+    .control-btn {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.7);
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .control-btn:hover {
+      background: rgba(212, 175, 55, 0.2);
+      border-color: rgba(212, 175, 55, 0.5);
+      color: #d4af37;
+    }
+
+    .control-btn.active {
+      background: rgba(212, 175, 55, 0.3);
+      border-color: #d4af37;
+      color: #d4af37;
+    }
+
+    /* Filter pills */
+    .filters {
+      position: absolute;
+      top: 100px;
+      right: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 100;
+    }
+
+    .filter-pill {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.5);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .filter-pill:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .filter-pill.active {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <div class="network-container">
+    <div class="stars" id="stars"></div>
+    <canvas id="networkCanvas"></canvas>
+
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon">&#9733;</div>
+        <span class="logo-text">OSCARS</span>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="#">Nominees</a>
+        <a href="#">Winners</a>
+        <a href="network.html" class="active">Network</a>
+        <a href="#">About</a>
+      </nav>
+    </header>
+
+    <div class="title-section">
+      <h1 class="page-title">Industry Network</h1>
+      <p class="page-subtitle">Explore connections across the film industry</p>
+    </div>
+
+    <div class="filters">
+      <button class="filter-pill active" data-filter="all">All Connections</button>
+      <button class="filter-pill" data-filter="actor-director">Actors & Directors</button>
+      <button class="filter-pill" data-filter="director-producer">Directors & Producers</button>
+      <button class="filter-pill" data-filter="studio-winner">Studios & Winners</button>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot actor"></div>
+        <span>Actors</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot director"></div>
+        <span>Directors</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot producer"></div>
+        <span>Producers</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot studio"></div>
+        <span>Studios</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot winner"></div>
+        <span>Past Winners</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="control-btn" id="resetBtn">Reset View</button>
+      <button class="control-btn" id="highlightBtn">Highlight Winners</button>
+    </div>
+
+    <div class="tooltip" id="tooltip">
+      <img class="tooltip-image" id="tooltip-image" src="" alt="">
+      <div class="tooltip-content">
+        <div class="tooltip-name"></div>
+        <div class="tooltip-type"></div>
+        <div class="tooltip-section">
+          <div class="tooltip-section-title">Collaborations</div>
+          <div class="tooltip-collab"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Helper to proxy images through weserv for CORS support
+    const imgProxy = (url) => `https://images.weserv.nl/?url=${encodeURIComponent(url)}&w=150&h=150&fit=cover`;
+
+    // Industry Network Data with profile images
+    const networkData = {
+      nodes: [
+        // Actors
+        { id: 1, name: "Cillian Murphy", type: "actor", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Cillian_Murphy_by_Gage_Skidmore.jpg/440px-Cillian_Murphy_by_Gage_Skidmore.jpg&w=150&h=150&fit=cover", collaborations: ["Christopher Nolan (6 films)", "Emma Thomas (6 films)"] },
+        { id: 2, name: "Margot Robbie", type: "actor", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Margot_Robbie_at_the_96th_Academy_Awards_%28cropped%29.jpg/440px-Margot_Robbie_at_the_96th_Academy_Awards_%28cropped%29.jpg&w=150&h=150&fit=cover", collaborations: ["Martin Scorsese (1 film)", "Greta Gerwig (1 film)"] },
+        { id: 3, name: "Bradley Cooper", type: "actor", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Bradley_Cooper_at_the_2023_NCUSAR_Gala_%28cropped%29.jpg/440px-Bradley_Cooper_at_the_2023_NCUSAR_Gala_%28cropped%29.jpg&w=150&h=150&fit=cover", collaborations: ["Clint Eastwood (4 films)", "Steven Spielberg (1 film)"] },
+        { id: 4, name: "Emma Stone", type: "actor", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Emma_Stone_at_the_96th_Academy_Awards_%28cropped%29.jpg/440px-Emma_Stone_at_the_96th_Academy_Awards_%28cropped%29.jpg&w=150&h=150&fit=cover", collaborations: ["Yorgos Lanthimos (3 films)", "Damien Chazelle (1 film)"] },
+        { id: 5, name: "Leonardo DiCaprio", type: "actor", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Leonardo_DiCaprio_2024.jpg/440px-Leonardo_DiCaprio_2024.jpg&w=150&h=150&fit=cover", collaborations: ["Martin Scorsese (6 films)", "Quentin Tarantino (2 films)"] },
+        { id: 6, name: "Florence Pugh", type: "actor", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Florence_Pugh_by_Gage_Skidmore_2.jpg/440px-Florence_Pugh_by_Gage_Skidmore_2.jpg&w=150&h=150&fit=cover", collaborations: ["Christopher Nolan (1 film)", "Greta Gerwig (1 film)"] },
+        { id: 7, name: "Austin Butler", type: "actor", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Austin_Butler_Cannes_2024_%28cropped%29.jpg/440px-Austin_Butler_Cannes_2024_%28cropped%29.jpg&w=150&h=150&fit=cover", collaborations: ["Baz Luhrmann (1 film)", "Quentin Tarantino (1 film)"] },
+        { id: 8, name: "Timothée Chalamet", type: "actor", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Timoth%C3%A9e_Chalamet_Cannes_2022_%28cropped%29.jpg/440px-Timoth%C3%A9e_Chalamet_Cannes_2022_%28cropped%29.jpg&w=150&h=150&fit=cover", collaborations: ["Denis Villeneuve (2 films)", "Greta Gerwig (1 film)"] },
+        { id: 9, name: "Ana de Armas", type: "actor", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Ana_de_Armas_at_the_96th_Academy_Awards_%28cropped%29.jpg/440px-Ana_de_Armas_at_the_96th_Academy_Awards_%28cropped%29.jpg&w=150&h=150&fit=cover", collaborations: ["Ryan Gosling (1 film)", "Knives Out (2019)"] },
+
+        // Directors
+        { id: 10, name: "Christopher Nolan", type: "director", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Christopher_Nolan_Cannes_2018.jpg/440px-Christopher_Nolan_Cannes_2018.jpg&w=150&h=150&fit=cover", collaborations: ["Emma Thomas (All films)", "Cillian Murphy (6 films)"] },
+        { id: 11, name: "Martin Scorsese", type: "director", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Martin_Scorsese_2023.jpg/440px-Martin_Scorsese_2023.jpg&w=150&h=150&fit=cover", collaborations: ["Leonardo DiCaprio (6 films)", "Thelma Schoonmaker (All films)"] },
+        { id: 12, name: "Greta Gerwig", type: "director", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Greta_Gerwig_at_the_96th_Academy_Awards_%28cropped%29.jpg/440px-Greta_Gerwig_at_the_96th_Academy_Awards_%28cropped%29.jpg&w=150&h=150&fit=cover", collaborations: ["Margot Robbie (1 film)", "Noah Baumbach (Writer)"] },
+        { id: 13, name: "Yorgos Lanthimos", type: "director", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Yorgos_Lanthimos_2018_%28cropped%29.jpg/440px-Yorgos_Lanthimos_2018_%28cropped%29.jpg&w=150&h=150&fit=cover", collaborations: ["Emma Stone (3 films)", "Element Pictures (5 films)"] },
+        { id: 14, name: "Steven Spielberg", type: "director", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Steven_Spielberg_%2836116726445%29.jpg/440px-Steven_Spielberg_%2836116726445%29.jpg&w=150&h=150&fit=cover", collaborations: ["Kathleen Kennedy (8 films)", "John Williams (All films)"] },
+        { id: 15, name: "Denis Villeneuve", type: "director", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Denis_Villeneuve_by_Gage_Skidmore.jpg/440px-Denis_Villeneuve_by_Gage_Skidmore.jpg&w=150&h=150&fit=cover", collaborations: ["Legendary Entertainment (3 films)", "Hans Zimmer (3 films)"] },
+        { id: 16, name: "Quentin Tarantino", type: "director", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Quentin_Tarantino_by_Gage_Skidmore.jpg/440px-Quentin_Tarantino_by_Gage_Skidmore.jpg&w=150&h=150&fit=cover", collaborations: ["Leonardo DiCaprio (2 films)", "Samuel L. Jackson (4 films)"] },
+
+        // Producers
+        { id: 20, name: "Emma Thomas", type: "producer", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Emma_Thomas_by_Gage_Skidmore.jpg/440px-Emma_Thomas_by_Gage_Skidmore.jpg&w=150&h=150&fit=cover", collaborations: ["Christopher Nolan (All films)", "Warner Bros (15 films)"] },
+        { id: 21, name: "Kathleen Kennedy", type: "producer", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Kathleen_Kennedy_2019_by_Glenn_Francis.jpg/440px-Kathleen_Kennedy_2019_by_Glenn_Francis.jpg&w=150&h=150&fit=cover", collaborations: ["Steven Spielberg (8 films)", "Lucasfilm (Star Wars)"] },
+        { id: 22, name: "Brad Pitt", type: "producer", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Brad_Pitt_at_the_96th_Academy_Awards_%28cropped%29.jpg/440px-Brad_Pitt_at_the_96th_Academy_Awards_%28cropped%29.jpg&w=150&h=150&fit=cover", collaborations: ["Plan B Entertainment", "Margot Robbie (Babylon)"] },
+        { id: 23, name: "Dede Gardner", type: "producer", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Dede_Gardner_2014.jpg/440px-Dede_Gardner_2014.jpg&w=150&h=150&fit=cover", collaborations: ["Plan B Entertainment", "12 Years a Slave"] },
+        { id: 24, name: "Jeremy Kleiner", type: "producer", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Jeremy_Kleiner_2014.jpg/440px-Jeremy_Kleiner_2014.jpg&w=150&h=150&fit=cover", collaborations: ["Plan B Entertainment", "12 Years a Slave"] },
+
+        // Studios
+        { id: 30, name: "Warner Bros", type: "studio", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Warner_Bros_logo.svg/200px-Warner_Bros_logo.svg.png&w=150&h=150&fit=contain&cbg=black", collaborations: ["Oppenheimer (2024)", "Dune (2024)"] },
+        { id: 31, name: "Universal", type: "studio", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Universal_Pictures_logo_%282013%29.svg/200px-Universal_Pictures_logo_%282013%29.svg.png&w=150&h=150&fit=contain&cbg=black", collaborations: ["Oppenheimer (2024)", "Killers of the Flower Moon"] },
+        { id: 32, name: "Netflix", type: "studio", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Netflix_2015_logo.svg/200px-Netflix_2015_logo.svg.png&w=150&h=150&fit=contain&cbg=black", collaborations: ["All Quiet (2023)", "Mank (2021)"] },
+        { id: 33, name: "A24 Studios", type: "studio", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/A24_2021_logo.svg/200px-A24_2021_logo.svg.png&w=150&h=150&fit=contain&cbg=black", collaborations: ["Everything Everywhere (2023)", "The Whale (2023)"] },
+        { id: 34, name: "Searchlight", type: "studio", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Searchlight_Pictures_logo.svg/200px-Searchlight_Pictures_logo.svg.png&w=150&h=150&fit=contain&cbg=black", collaborations: ["The Favourite (2019)", "Poor Things (2024)"] },
+
+        // Past Winners
+        { id: 40, name: "Brendan Fraser", type: "winner", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Brendan_Fraser_2023_%28cropped%29.jpg/440px-Brendan_Fraser_2023_%28cropped%29.jpg&w=150&h=150&fit=cover", collaborations: ["The Whale (2023 Winner)", "Darren Aronofsky (1 film)"] },
+        { id: 41, name: "Michelle Yeoh", type: "winner", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Michelle_Yeoh_2024_%28cropped%29.jpg/440px-Michelle_Yeoh_2024_%28cropped%29.jpg&w=150&h=150&fit=cover", collaborations: ["Everything Everywhere (2023 Winner)", "Daniels (Directors)"] },
+        { id: 42, name: "Ke Huy Quan", type: "winner", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Ke_Huy_Quan_at_the_96th_Academy_Awards_%28cropped%29.jpg/440px-Ke_Huy_Quan_at_the_96th_Academy_Awards_%28cropped%29.jpg&w=150&h=150&fit=cover", collaborations: ["Everything Everywhere (2023 Winner)", "Michelle Yeoh (1 film)"] },
+        { id: 43, name: "Jamie Lee Curtis", type: "winner", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Jamie_Lee_Curtis_at_the_95th_Academy_Awards_%28cropped%29.jpg/440px-Jamie_Lee_Curtis_at_the_95th_Academy_Awards_%28cropped%29.jpg&w=150&h=150&fit=cover", collaborations: ["Everything Everywhere (2023 Winner)", "A24 (1 film)"] },
+        { id: 44, name: "Daniel Kwan", type: "winner", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Daniel_Kwan_%2851536933472%29_%28cropped%29.jpg/440px-Daniel_Kwan_%2851536933472%29_%28cropped%29.jpg&w=150&h=150&fit=cover", collaborations: ["Everything Everywhere (Best Director)", "Best Original Screenplay"] },
+        { id: 45, name: "Daniel Scheinert", type: "winner", x: 0, y: 0, image: "https://images.weserv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Daniel_Scheinert_by_Gage_Skidmore.jpg/440px-Daniel_Scheinert_by_Gage_Skidmore.jpg&w=150&h=150&fit=cover", collaborations: ["Everything Everywhere (Best Director)", "Best Original Screenplay"] },
+      ],
+      edges: [
+        // Actor-Director connections
+        { source: 1, target: 10, type: "actor-director" },
+        { source: 5, target: 11, type: "actor-director" },
+        { source: 5, target: 16, type: "actor-director" },
+        { source: 4, target: 13, type: "actor-director" },
+        { source: 6, target: 10, type: "actor-director" },
+        { source: 2, target: 11, type: "actor-director" },
+        { source: 2, target: 12, type: "actor-director" },
+        { source: 3, target: 14, type: "actor-director" },
+        { source: 7, target: 16, type: "actor-director" },
+        { source: 8, target: 15, type: "actor-director" },
+        { source: 8, target: 12, type: "actor-director" },
+        { source: 9, target: 3, type: "actor-director" },
+
+        // Director-Producer connections
+        { source: 10, target: 20, type: "director-producer" },
+        { source: 14, target: 21, type: "director-producer" },
+        { source: 12, target: 22, type: "director-producer" },
+        { source: 13, target: 23, type: "director-producer" },
+        { source: 15, target: 20, type: "director-producer" },
+        { source: 22, target: 24, type: "director-producer" },
+        { source: 16, target: 22, type: "director-producer" },
+
+        // Studio-Winner connections
+        { source: 30, target: 1, type: "studio-winner" },
+        { source: 33, target: 41, type: "studio-winner" },
+        { source: 33, target: 42, type: "studio-winner" },
+        { source: 33, target: 43, type: "studio-winner" },
+        { source: 31, target: 40, type: "studio-winner" },
+        { source: 30, target: 5, type: "studio-winner" },
+        { source: 34, target: 4, type: "studio-winner" },
+        { source: 33, target: 44, type: "studio-winner" },
+        { source: 33, target: 45, type: "studio-winner" },
+
+        // Additional meaningful connections between winners
+        { source: 41, target: 42, type: "studio-winner" },
+        { source: 41, target: 43, type: "studio-winner" },
+        { source: 42, target: 43, type: "studio-winner" },
+        { source: 44, target: 45, type: "studio-winner" },
+        { source: 44, target: 41, type: "studio-winner" },
+        { source: 45, target: 42, type: "studio-winner" },
+      ]
+    };
+
+    // Color scheme
+    const colors = {
+      actor: { fill: '#ffd700', glow: 'rgba(255, 215, 0, 0.4)' },
+      director: { fill: '#00bfff', glow: 'rgba(0, 191, 255, 0.4)' },
+      producer: { fill: '#ff6b6b', glow: 'rgba(255, 107, 107, 0.4)' },
+      studio: { fill: '#a855f7', glow: 'rgba(168, 85, 247, 0.4)' },
+      winner: { fill: '#4ade80', glow: 'rgba(74, 222, 128, 0.4)' }
+    };
+
+    // Canvas setup
+    const canvas = document.getElementById('networkCanvas');
+    const ctx = canvas.getContext('2d');
+    const tooltip = document.getElementById('tooltip');
+    let width, height;
+    let hoveredNode = null;
+    let currentFilter = 'all';
+    let highlightWinners = false;
+
+    // Image loading and caching
+    const imageCache = {};
+    let imagesLoaded = 0;
+    let totalImages = networkData.nodes.length;
+
+    function preloadImages() {
+      networkData.nodes.forEach(node => {
+        const img = new Image();
+        img.onload = () => {
+          imagesLoaded++;
+          node.imageLoaded = true;
+        };
+        img.onerror = () => {
+          imagesLoaded++;
+          node.imageLoaded = false;
+          console.log('Failed to load image for:', node.name);
+        };
+        img.src = node.image;
+        imageCache[node.id] = img;
+      });
+    }
+
+    // Get initials for fallback
+    function getInitials(name) {
+      return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    }
+
+    // Initialize positions
+    function initializePositions() {
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const maxRadius = Math.min(width, height) * 0.35;
+
+      // Group nodes by type
+      const typeGroups = {
+        actor: networkData.nodes.filter(n => n.type === 'actor'),
+        director: networkData.nodes.filter(n => n.type === 'director'),
+        producer: networkData.nodes.filter(n => n.type === 'producer'),
+        studio: networkData.nodes.filter(n => n.type === 'studio'),
+        winner: networkData.nodes.filter(n => n.type === 'winner')
+      };
+
+      // Position each type in different orbital rings
+      const typePositions = {
+        actor: { angle: -Math.PI / 2, radius: maxRadius * 0.5 },
+        director: { angle: 0, radius: maxRadius * 0.7 },
+        producer: { angle: Math.PI, radius: maxRadius * 0.6 },
+        studio: { angle: Math.PI / 2, radius: maxRadius * 0.9 },
+        winner: { angle: Math.PI / 4, radius: maxRadius * 0.4 }
+      };
+
+      for (const [type, nodes] of Object.entries(typeGroups)) {
+        const pos = typePositions[type];
+        nodes.forEach((node, i) => {
+          const angleSpread = (Math.PI * 0.8) / (nodes.length + 1);
+          const angle = pos.angle - (Math.PI * 0.4) + angleSpread * (i + 1);
+          const radiusVariation = pos.radius * (0.9 + Math.random() * 0.2);
+
+          node.x = centerX + Math.cos(angle) * radiusVariation;
+          node.y = centerY + Math.sin(angle) * radiusVariation;
+          node.vx = 0;
+          node.vy = 0;
+          node.radius = type === 'studio' ? 28 : type === 'winner' ? 26 : 24;
+        });
+      }
+    }
+
+    // Resize handler
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      initializePositions();
+    }
+
+    // Create starfield background
+    function createStars() {
+      const starsContainer = document.getElementById('stars');
+      const starCount = 150;
+
+      for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 2 + 1;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.setProperty('--duration', `${2 + Math.random() * 4}s`);
+        star.style.setProperty('--min-opacity', '0.2');
+        star.style.setProperty('--max-opacity', `${0.5 + Math.random() * 0.5}`);
+        starsContainer.appendChild(star);
+      }
+    }
+
+    // Physics simulation (gentle attraction to center + repulsion)
+    function simulate() {
+      const centerX = width / 2;
+      const centerY = height / 2;
+
+      // Apply forces
+      networkData.nodes.forEach(node => {
+        // Gentle center attraction
+        const dx = centerX - node.x;
+        const dy = centerY - node.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const force = 0.00005;
+
+        node.vx += dx * force;
+        node.vy += dy * force;
+
+        // Repulsion from other nodes
+        networkData.nodes.forEach(other => {
+          if (node.id !== other.id) {
+            const dx = node.x - other.x;
+            const dy = node.y - other.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 150) {
+              const force = 0.5 / (dist * dist + 1);
+              node.vx += dx * force;
+              node.vy += dy * force;
+            }
+          }
+        });
+
+        // Damping
+        node.vx *= 0.95;
+        node.vy *= 0.95;
+
+        // Update position
+        node.x += node.vx;
+        node.y += node.vy;
+
+        // Keep in bounds
+        const margin = 150;
+        node.x = Math.max(margin, Math.min(width - margin, node.x));
+        node.y = Math.max(margin, Math.min(height - margin, node.y));
+      });
+    }
+
+    // Check if edge should be shown based on filter
+    function shouldShowEdge(edge) {
+      if (currentFilter === 'all') return true;
+      return edge.type === currentFilter;
+    }
+
+    // Draw function
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw edges
+      networkData.edges.forEach(edge => {
+        if (!shouldShowEdge(edge)) return;
+
+        const source = networkData.nodes.find(n => n.id === edge.source);
+        const target = networkData.nodes.find(n => n.id === edge.target);
+
+        const isHovered = hoveredNode && (hoveredNode.id === source.id || hoveredNode.id === target.id);
+
+        ctx.beginPath();
+        ctx.moveTo(source.x, source.y);
+        ctx.lineTo(target.x, target.y);
+
+        if (isHovered) {
+          ctx.strokeStyle = 'rgba(212, 175, 55, 0.8)';
+          ctx.lineWidth = 2;
+        } else {
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+          ctx.lineWidth = 1;
+        }
+        ctx.stroke();
+      });
+
+      // Draw nodes with images
+      networkData.nodes.forEach(node => {
+        const color = colors[node.type];
+        const isHovered = hoveredNode && hoveredNode.id === node.id;
+        const isWinnerHighlight = highlightWinners && node.type === 'winner';
+        const radius = isHovered ? node.radius * 1.5 : node.radius;
+        const img = imageCache[node.id];
+
+        // Glow effect
+        const gradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, radius * 2.5);
+        gradient.addColorStop(0, color.glow);
+        gradient.addColorStop(1, 'transparent');
+
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, radius * 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+
+        // Winner highlight ring
+        if (isWinnerHighlight) {
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, radius + 4, 0, Math.PI * 2);
+          ctx.strokeStyle = '#4ade80';
+          ctx.lineWidth = 3;
+          ctx.shadowColor = '#4ade80';
+          ctx.shadowBlur = 15;
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        }
+
+        // Colored ring around image
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, radius + 2, 0, Math.PI * 2);
+        ctx.strokeStyle = isHovered ? '#ffffff' : color.fill;
+        ctx.lineWidth = isHovered ? 3 : 2;
+        ctx.stroke();
+
+        // Draw circular image
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+
+        if (img && img.complete && img.naturalWidth > 0) {
+          // Draw the image centered and scaled to fit
+          const size = radius * 2;
+          ctx.drawImage(img, node.x - radius, node.y - radius, size, size);
+        } else {
+          // Fallback to colored circle with initials
+          ctx.fillStyle = color.fill;
+          ctx.fill();
+          ctx.font = `bold ${radius * 0.8}px Inter`;
+          ctx.fillStyle = '#000000';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(getInitials(node.name), node.x, node.y);
+        }
+        ctx.restore();
+
+        // Hover effect - outer glow
+        if (isHovered) {
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, radius + 5, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(212, 175, 55, 0.6)';
+          ctx.lineWidth = 2;
+          ctx.shadowColor = '#d4af37';
+          ctx.shadowBlur = 20;
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        }
+
+        // Label for hovered node
+        if (isHovered) {
+          // Background for label
+          ctx.font = '600 13px Inter';
+          const textWidth = ctx.measureText(node.name).width;
+          const padding = 10;
+          const labelY = node.y - radius - 20;
+
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+          ctx.beginPath();
+          ctx.roundRect(node.x - textWidth/2 - padding, labelY - 12, textWidth + padding*2, 24, 12);
+          ctx.fill();
+
+          // Border
+          ctx.strokeStyle = color.fill;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+
+          // Text
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(node.name, node.x, labelY);
+        }
+      });
+    }
+
+    // Animation loop
+    function animate() {
+      simulate();
+      draw();
+      requestAnimationFrame(animate);
+    }
+
+    // Mouse interaction
+    function getMouseNode(e) {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      return networkData.nodes.find(node => {
+        const dx = mouseX - node.x;
+        const dy = mouseY - node.y;
+        return Math.sqrt(dx * dx + dy * dy) < node.radius + 10;
+      });
+    }
+
+    // Polyfill for roundRect if needed
+    if (!CanvasRenderingContext2D.prototype.roundRect) {
+      CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+        if (w < 2 * r) r = w / 2;
+        if (h < 2 * r) r = h / 2;
+        this.beginPath();
+        this.moveTo(x + r, y);
+        this.arcTo(x + w, y, x + w, y + h, r);
+        this.arcTo(x + w, y + h, x, y + h, r);
+        this.arcTo(x, y + h, x, y, r);
+        this.arcTo(x, y, x + w, y, r);
+        this.closePath();
+        return this;
+      }
+    }
+
+    canvas.addEventListener('mousemove', (e) => {
+      const node = getMouseNode(e);
+
+      if (node !== hoveredNode) {
+        hoveredNode = node;
+        canvas.style.cursor = node ? 'pointer' : 'default';
+
+        if (node) {
+          const tooltipName = tooltip.querySelector('.tooltip-name');
+          const tooltipType = tooltip.querySelector('.tooltip-type');
+          const tooltipCollab = tooltip.querySelector('.tooltip-collab');
+          const tooltipImage = document.getElementById('tooltip-image');
+
+          tooltipName.textContent = node.name;
+          tooltipType.textContent = node.type.toUpperCase();
+          tooltipImage.src = node.image;
+          tooltipImage.style.borderColor = colors[node.type].fill;
+
+          tooltipCollab.innerHTML = node.collaborations.map(c => {
+            const dotColor = c.includes('Director') ? '#00bfff' :
+                            c.includes('Producer') ? '#ff6b6b' :
+                            c.includes('film') ? '#d4af37' : '#ffffff';
+            return `<div class="tooltip-collab-item">
+              <div class="tooltip-collab-dot" style="background: ${dotColor}"></div>
+              ${c}
+            </div>`;
+          }).join('');
+
+          // Position tooltip
+          let x = e.clientX + 20;
+          let y = e.clientY - 20;
+
+          // Keep tooltip in viewport
+          const tooltipRect = tooltip.getBoundingClientRect();
+          if (x + 280 > window.innerWidth) x = e.clientX - 300;
+          if (y + tooltipRect.height > window.innerHeight) y = window.innerHeight - tooltipRect.height - 20;
+
+          tooltip.style.left = `${x}px`;
+          tooltip.style.top = `${y}px`;
+          tooltip.classList.add('visible');
+        } else {
+          tooltip.classList.remove('visible');
+        }
+      }
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+      hoveredNode = null;
+      tooltip.classList.remove('visible');
+    });
+
+    // Filter buttons
+    document.querySelectorAll('.filter-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+      });
+    });
+
+    // Control buttons
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      initializePositions();
+    });
+
+    document.getElementById('highlightBtn').addEventListener('click', (e) => {
+      highlightWinners = !highlightWinners;
+      e.target.classList.toggle('active');
+    });
+
+    // Initialize
+    window.addEventListener('resize', resize);
+    resize();
+    createStars();
+    preloadImages();
+    animate();
+  </script>
+</body>
+</html>
