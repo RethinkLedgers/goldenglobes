@@ -1,85 +1,255 @@
 @import "tailwindcss";
 
-:root {
-  --gold: #FFD700;
-  --gold-dark: #B8860B;
-  --gold-light: #FFF8DC;
-  --black: #0a0a0a;
-  --charcoal: #1a1a1a;
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
 }
 
+:root {
+  --gold: #C5A44E;
+  --gold-bright: #D4AF37;
+  --gold-dark: #8B7332;
+  --gold-light: #E8D48B;
+  --gold-glow: rgba(197, 164, 78, 0.4);
+  --black: #000000;
+  --black-soft: #0a0a0a;
+  --charcoal: #111111;
+  --charcoal-light: #1a1a1a;
+}
+
+/* ===== GLOBAL BODY ===== */
+body {
+  background: var(--black);
+  min-height: 100vh;
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* ===== SHIMMER TEXT (Gold gradient text) ===== */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
 
-@keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0); }
-  50% { opacity: 1; transform: scale(1); }
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    var(--gold-dark),
+    var(--gold),
+    var(--gold-light),
+    var(--gold),
+    var(--gold-dark)
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s infinite linear;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+/* ===== FLOWING GOLD RIBBONS (Background effect) ===== */
+@keyframes ribbon-flow {
+  0% {
+    transform: translateX(-30%) translateY(0) rotate(-3deg) scaleY(1);
+    opacity: 0.15;
+  }
+  25% {
+    transform: translateX(-10%) translateY(-5%) rotate(-1deg) scaleY(1.1);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translateX(10%) translateY(-2%) rotate(1deg) scaleY(0.9);
+    opacity: 0.2;
+  }
+  75% {
+    transform: translateX(20%) translateY(-8%) rotate(2deg) scaleY(1.05);
+    opacity: 0.15;
+  }
+  100% {
+    transform: translateX(-30%) translateY(0) rotate(-3deg) scaleY(1);
+    opacity: 0.15;
+  }
 }
 
-@keyframes pulse-gold {
-  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
-  50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
+@keyframes ribbon-flow-2 {
+  0% {
+    transform: translateX(20%) translateY(0) rotate(2deg) scaleY(1);
+    opacity: 0.1;
+  }
+  25% {
+    transform: translateX(5%) translateY(3%) rotate(0deg) scaleY(1.15);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateX(-15%) translateY(1%) rotate(-2deg) scaleY(0.85);
+    opacity: 0.15;
+  }
+  75% {
+    transform: translateX(-25%) translateY(5%) rotate(-3deg) scaleY(1.1);
+    opacity: 0.1;
+  }
+  100% {
+    transform: translateX(20%) translateY(0) rotate(2deg) scaleY(1);
+    opacity: 0.1;
+  }
 }
 
+@keyframes ribbon-flow-3 {
+  0% {
+    transform: translateX(0%) translateY(0) rotate(0deg);
+    opacity: 0.08;
+  }
+  33% {
+    transform: translateX(-20%) translateY(-3%) rotate(-2deg);
+    opacity: 0.18;
+  }
+  66% {
+    transform: translateX(15%) translateY(2%) rotate(1.5deg);
+    opacity: 0.12;
+  }
+  100% {
+    transform: translateX(0%) translateY(0) rotate(0deg);
+    opacity: 0.08;
+  }
+}
+
+.gold-ribbons {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gold-ribbons::before,
+.gold-ribbons::after {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 120px;
+}
+
+.gold-ribbons::before {
+  top: 8%;
+  left: -50%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold-glow) 20%,
+    rgba(212, 175, 55, 0.3) 40%,
+    var(--gold-glow) 60%,
+    transparent 80%
+  );
+  filter: blur(40px);
+  animation: ribbon-flow 12s ease-in-out infinite;
+}
+
+.gold-ribbons::after {
+  top: 35%;
+  left: -50%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(197, 164, 78, 0.2) 30%,
+    rgba(232, 212, 139, 0.25) 50%,
+    rgba(197, 164, 78, 0.2) 70%,
+    transparent 100%
+  );
+  filter: blur(50px);
+  animation: ribbon-flow-2 15s ease-in-out infinite;
+}
+
+.gold-ribbon-extra {
+  position: absolute;
+  width: 200%;
+  height: 80px;
+  top: 65%;
+  left: -50%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(139, 115, 50, 0.15) 25%,
+    rgba(197, 164, 78, 0.2) 50%,
+    rgba(139, 115, 50, 0.15) 75%,
+    transparent 100%
+  );
+  filter: blur(45px);
+  animation: ribbon-flow-3 18s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ===== GOLD RING / CIRCLE ELEMENT ===== */
+@keyframes ring-pulse {
+  0%, 100% {
+    box-shadow: 0 0 30px rgba(197, 164, 78, 0.2), inset 0 0 30px rgba(197, 164, 78, 0.1);
+    opacity: 0.8;
+  }
+  50% {
+    box-shadow: 0 0 60px rgba(197, 164, 78, 0.35), inset 0 0 40px rgba(197, 164, 78, 0.15);
+    opacity: 1;
+  }
+}
+
+.gold-ring {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  animation: ring-pulse 4s ease-in-out infinite;
+  position: relative;
+}
+
+.gold-ring::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  border: 1px solid rgba(197, 164, 78, 0.4);
+}
+
+/* ===== SUBTLE GLOW FOR CARDS ===== */
+@keyframes subtle-glow {
+  0%, 100% { box-shadow: 0 0 0 rgba(197, 164, 78, 0); }
+  50% { box-shadow: 0 0 20px rgba(197, 164, 78, 0.08); }
+}
+
+.card-glow {
+  animation: subtle-glow 3s ease-in-out infinite;
+}
+
+/* ===== GRADIENT BORDER ===== */
 @keyframes gradient-shift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-.shimmer-text {
-  background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light), var(--gold), var(--gold-dark));
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer 3s infinite linear;
+.gradient-border {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark), var(--gold));
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
 }
 
-.sparkle-bg {
+/* ===== CATEGORY HEADER HOVER ===== */
+.category-header {
   position: relative;
   overflow: hidden;
 }
 
-.sparkle-bg::before {
+.category-header::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(2px 2px at 20px 30px, var(--gold), transparent),
-    radial-gradient(2px 2px at 40px 70px, var(--gold-light), transparent),
-    radial-gradient(1px 1px at 90px 40px, var(--gold), transparent),
-    radial-gradient(2px 2px at 130px 80px, var(--gold-light), transparent),
-    radial-gradient(1px 1px at 160px 30px, var(--gold), transparent);
-  background-size: 200px 100px;
-  animation: sparkle 4s infinite;
-  pointer-events: none;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(197, 164, 78, 0.05), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
 }
 
-.card-glow {
-  animation: pulse-gold 2s infinite;
+.category-header:hover::before {
+  transform: translateX(100%);
 }
 
-.gradient-border {
-  background: linear-gradient(135deg, var(--gold), var(--gold-dark), var(--gold));
-  background-size: 200% 200%;
-  animation: gradient-shift 3s ease infinite;
-}
-
-.trophy-float {
-  animation: float 3s ease-in-out infinite;
-}
-
+/* ===== MODAL ===== */
 @keyframes slide-up {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
@@ -89,7 +259,231 @@
   animation: slide-up 0.3s ease-out forwards;
 }
 
-body {
-  background: linear-gradient(180deg, var(--black) 0%, var(--charcoal) 100%);
-  min-height: 100vh;
+/* ===== ELEGANT DIVIDER ===== */
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gold-dark) 20%,
+    var(--gold) 50%,
+    var(--gold-dark) 80%,
+    transparent
+  );
+  opacity: 0.3;
 }
+
+/* ===== FADE IN ANIMATION ===== */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+/* ===== NOMINEE CARD REVEAL ANIMATION ===== */
+@keyframes nominee-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-nominee-reveal {
+  animation: nominee-reveal 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+  opacity: 0;
+}
+
+/* ===== FADE IN ANIMATION ===== */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+/* ===== NETWORK GRAPH STYLES ===== */
+.network-node:hover circle:first-of-type {
+  fill-opacity: 0.3 !important;
+  r: 40;
+}
+
+.network-node:hover circle:nth-of-type(2) {
+  stroke-width: 3;
+}
+
+.network-node:hover rect {
+  opacity: 1 !important;
+}
+
+.network-node:hover text:last-of-type {
+  opacity: 1 !important;
+}
+
+.network-node:hover text:nth-last-of-type(2) {
+  opacity: 1 !important;
+}
+
+.network-edge:hover line:first-of-type {
+  stroke-opacity: 1;
+  stroke-width: 2.5;
+}
+
+/* ===== CONFETTI ANIMATION ===== */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.animate-confetti-fall {
+  animation: confetti-fall linear forwards;
+}
+
+/* ===== SHIMMER TEXT ANIMATION ===== */
+@keyframes shimmer-text {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+.animate-shimmer-text {
+  animation: shimmer-text 3s linear infinite;
+}
+
+/* ===== WINNER GLOW ANIMATION ===== */
+@keyframes winner-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(197, 164, 78, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(197, 164, 78, 0.4);
+  }
+}
+
+.animate-winner-glow {
+  animation: winner-glow 2s ease-in-out infinite;
+}
+
+/* ===== LIVE MODE STYLES ===== */
+.live-mode {
+  --gold: #D4AF37;
+  --gold-bright: #E8C547;
+}
+
+.gold-divider.live-intensified {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gold-bright) 20%,
+    var(--gold-bright) 50%,
+    var(--gold-bright) 80%,
+    transparent
+  );
+  opacity: 0.5;
+  height: 2px;
+}
+
+/* Live mode body darkening */
+.live-mode ~ .gold-ribbons::before,
+.live-mode ~ .gold-ribbons::after {
+  opacity: 0.25;
+}
+
+/* ===== LIGHT STREAK ACCENT ===== */
+@keyframes streak {
+  0% {
+    transform: translateX(-100%) skewX(-20deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateX(300%) skewX(-20deg);
+    opacity: 0;
+  }
+}
+
+.light-streak {
+  position: relative;
+  overflow: hidden;
+}
+
+.light-streak::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(197, 164, 78, 0.15),
+    transparent
+  );
+  animation: streak 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ===== TWINKLE ANIMATION (Network Page) ===== */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.5);
+  }
+}
+
+.animate-twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+/* ===== SCROLLBAR STYLING ===== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gold-dark);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
