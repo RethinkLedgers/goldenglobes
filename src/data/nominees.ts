@@ -15,7 +15,7 @@ export interface Category {
 export const categories: Category[] = [
   {
     name: "Best Picture",
-    icon: "🏆",
+    icon: "",
     nominees: [
       { title: "Bugonia", image: "https://image.tmdb.org/t/p/w500/oxgsAQDAAxA92mFGYCZllgWkH9J.jpg", description: "Two friends who work at the same company think their boss is really an alien who wants to end the world. They make a plan to stop her, but things go wrong in ways they did not expect." },
       { title: "Frankenstein", image: "https://image.tmdb.org/t/p/w500/g4JtvGlQO7DByTI6frUobqvSL3R.jpg", description: "A scientist builds a living person out of dead body parts. When he sees what he has done, he runs away. The creature is left alone and tries to find someone who will care about him, but people are afraid of how he looks." },
@@ -31,7 +31,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Actor",
-    icon: "🎭",
+    icon: "",
     nominees: [
       { title: "Timothée Chalamet", image: "https://image.tmdb.org/t/p/w500/dFxpwRpmzpVfP1zjluH68DeQhyj.jpg", details: "Marty Supreme", description: "He plays Marty Reisman, a real person who was one of the best ping-pong players in 1950s New York City. He spends his days in small clubs taking on anyone who will play him and trying to make a name for himself." },
       { title: "Leonardo DiCaprio", image: "https://image.tmdb.org/t/p/w500/iqPBAdsFdAVCdahQM29kTG6UgD7.jpg", details: "One Battle After Another", description: "He plays Bob Ferguson, the head of a rich family in 1970s Los Angeles who runs a big business. The people around him all want more for themselves, and he has to figure out who he can trust before things fall apart." },
@@ -42,7 +42,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Actress",
-    icon: "🎭",
+    icon: "",
     nominees: [
       { title: "Jessie Buckley", image: "https://image.tmdb.org/t/p/w500/i8IlkFbZqKUgkypZKpdhrw00uqw.jpg", details: "Hamnet", description: "She plays Agnes, the wife of the famous writer William Shakespeare. He is away working in London most of the time, so she takes care of their children on her own. When their young son Hamnet gets very sick, she has to face it without him there." },
       { title: "Rose Byrne", image: "https://image.tmdb.org/t/p/w500/6YauDiiTBwRGC1xnwspPmNvPWUu.jpg", details: "If I Had Legs I'd Kick You", description: "She plays Linda, a mother who is having the worst day of her life. Her daughter is sick and no one can figure out why. Her husband is never home. Everything keeps going wrong and she is trying her best to hold it all together." },
@@ -53,7 +53,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Supporting Actress",
-    icon: "⭐",
+    icon: "",
     nominees: [
       { title: "Elle Fanning", image: "https://image.tmdb.org/t/p/w500/e8CUyxQSE99y5IOfzSLtHC0B0Ch.jpg", details: "Sentimental Value", description: "She plays Rachel Kemp, an American actress who is hired by a film director to star in a movie at his family home in Norway. She gets pulled into the family's problems without knowing the full story behind them." },
       { title: "Inga Ibsdotter Lilleaas", image: "https://image.tmdb.org/t/p/w500/wlZPIgnXMpK3Nvvhg0bZzmWxZDH.jpg", details: "Sentimental Value", description: "She plays Agnes Borg, one of the family members who comes back to the house in Norway after a death in the family. She has her own history with the people there, and being together again brings up things she tried to leave behind." },
@@ -64,7 +64,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Supporting Actor",
-    icon: "⭐",
+    icon: "",
     nominees: [
       { title: "Benicio del Toro", image: "https://image.tmdb.org/t/p/w500/aYomJWx0B2B8ra6Rmgt8lr0XCrw.jpg", details: "One Battle After Another", description: "He plays Sensei Sergio, the right-hand man of a powerful family leader in 1970s Los Angeles. He has been loyal for years, but he also has plans of his own that could change everything." },
       { title: "Jacob Elordi", image: "https://image.tmdb.org/t/p/w500/qZNRPWCP2c5d0YaYLTzHXU9Rdoe.jpg", details: "Frankenstein", description: "He plays the Creature, a being built from dead body parts and brought to life by a scientist named Victor Frankenstein. After he is left alone, he tries to learn about the world and find someone who will accept him." },
@@ -75,7 +75,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Director",
-    icon: "🎬",
+    icon: "",
     nominees: [
       { title: "Paul Thomas Anderson", image: "https://image.tmdb.org/t/p/w500/wKAs2LtLYSUzt3ZZ8pnxMwuEWuR.jpg", details: "One Battle After Another", description: "He directed One Battle After Another, a story about a rich family in 1970s Los Angeles and the people around them who all want more for themselves. He also directed Boogie Nights, There Will Be Blood, and Licorice Pizza." },
       { title: "Ryan Coogler", image: "https://image.tmdb.org/t/p/w500/dux4DCDaL6c639DTXGiV7nm1wcN.jpg", details: "Sinners", description: "He directed Sinners, a movie about twin brothers who go back to their small town in the 1930s South and end up fighting vampires. He also directed Black Panther and Creed." },
@@ -86,7 +86,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Adapted Screenplay",
-    icon: "📝",
+    icon: "",
     nominees: [
       { title: "Bugonia", image: "https://image.tmdb.org/t/p/w500/oxgsAQDAAxA92mFGYCZllgWkH9J.jpg", description: "Two friends who work at the same company think their boss is really an alien who wants to end the world. They make a plan to stop her, but things go wrong in ways they did not expect." },
       { title: "Frankenstein", image: "https://image.tmdb.org/t/p/w500/g4JtvGlQO7DByTI6frUobqvSL3R.jpg", description: "A scientist builds a living person out of dead body parts. When he sees what he has done, he runs away. The creature is left alone and tries to find someone who will care about him, but people are afraid of how he looks." },
@@ -97,7 +97,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Original Screenplay",
-    icon: "✍️",
+    icon: "",
     nominees: [
       { title: "Blue Moon", image: "https://image.tmdb.org/t/p/w500/nij3i5ziQdqfiK29gb4rX1bkmVy.jpg", description: "On one night in 1943, a songwriter named Lorenz Hart sits in a bar while his old partner Richard Rodgers celebrates a big new show without him. Lorenz looks back on his life and tries to figure out where things went wrong." },
       { title: "It Was Just an Accident", image: "https://image.tmdb.org/t/p/w500/eNYGj2DG3n8OrVPTfYunpPW9uas.jpg", description: "A car mechanic who was once locked up in an Iranian prison sees a man walk into his shop one day. He thinks the man might be the same person who hurt him when he was in jail, and he has to decide what to do about it." },
@@ -108,7 +108,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Original Song",
-    icon: "🎤",
+    icon: "",
     nominees: [
       { title: "Dear Me", image: "https://image.tmdb.org/t/p/w500/uhfvnmtq6cgpI038YrRsgmThb2D.jpg", details: "Diane Warren: Relentless", description: "This song comes from a documentary about Diane Warren, a songwriter who has been writing hit songs for over 40 years. She has been nominated for an Oscar 15 times before but never won. The film takes a close look at her life, how she works, and why she never stops writing. The song Dear Me is written as a letter to her younger self." },
       { title: "Golden", image: "https://image.tmdb.org/t/p/w500/zT7Lhw3BhJbMkRqm9Zlx2YGMsY0.jpg", details: "KPop Demon Hunters", description: "This song comes from an animated movie about three K-pop singers named Rumi, Mira, and Zoey who live double lives. By day they sell out stadiums, but they also have secret powers they use to protect people from demons and monsters. Golden is about finding the strength inside yourself even when everything feels like it is falling apart." },
@@ -119,7 +119,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Original Score",
-    icon: "🎵",
+    icon: "",
     nominees: [
       { title: "Bugonia", image: "https://image.tmdb.org/t/p/w500/oxgsAQDAAxA92mFGYCZllgWkH9J.jpg", description: "Two friends who work at the same company think their boss is really an alien who wants to end the world. They make a plan to stop her, but things go wrong in ways they did not expect." },
       { title: "Frankenstein", image: "https://image.tmdb.org/t/p/w500/g4JtvGlQO7DByTI6frUobqvSL3R.jpg", description: "A scientist builds a living person out of dead body parts. When he sees what he has done, he runs away. The creature is left alone and tries to find someone who will care about him, but people are afraid of how he looks." },
@@ -130,7 +130,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best International Feature",
-    icon: "🌍",
+    icon: "",
     nominees: [
       { title: "It Was Just an Accident", image: "https://image.tmdb.org/t/p/w500/eNYGj2DG3n8OrVPTfYunpPW9uas.jpg", description: "A car mechanic who was once locked up in an Iranian prison sees a man walk into his shop one day. He thinks the man might be the same person who hurt him when he was in jail, and he has to decide what to do about it." },
       { title: "Sentimental Value", image: "https://image.tmdb.org/t/p/w500/pz9NCWxxOk3o0W3v1Zkhawrwb4i.jpg", description: "After their father dies, a family meets at their old house in Norway. They have not been together in a long time. Old fights and secrets they buried years ago start to come back up. Each person remembers things differently, and no one can agree on what really happened in the past. They have to figure out if they can forgive each other and move on." },
@@ -141,7 +141,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Animated Feature",
-    icon: "🎨",
+    icon: "",
     nominees: [
       { title: "Arco", image: "https://image.tmdb.org/t/p/w500/sV5B8qn4HhIPCKNFighAVMjKBtR.jpg", description: "A boy named Arco lives far in the future. On his first time flying in a rainbow suit, he loses control and lands in the year 2075. A girl named Iris finds him and tries to help him get back to his own time. Together they go on an adventure and learn about the world and each other." },
       { title: "Elio", image: "https://image.tmdb.org/t/p/w500/7z8jDiTZZco9moIKpTUImFtTy7o.jpg", description: "An eleven-year-old boy named Elio loves space and feels like he does not belong on Earth. One day, aliens beam him up to a place called the Communiverse because they think he is Earth's ambassador. He has to figure out how to handle the job while making friends with the aliens he meets." },
@@ -152,7 +152,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Documentary Feature",
-    icon: "🎥",
+    icon: "",
     nominees: [
       { title: "Come See Me in the Good Light", image: "https://image.tmdb.org/t/p/w500/5AFbcDGT78cLZTyHTSDBohczjuO.jpg", description: "Two poets named Andrea Gibson and Megan Falley are married and deeply in love. When Andrea finds out they have cancer that cannot be cured, they spend what might be their last year together. The film follows them through that time at their home in Colorado." },
       { title: "Cutting Through the Rocks", image: "https://image.tmdb.org/t/p/w500/qefjf5TeM0uRzrFU2c4xYt6ew9z.jpg", description: "Sara Shahverdi is the first woman ever elected to a local council in her village in Iran. She rides motorcycles, fights to stop child marriages, and trains teenage girls to stand up for themselves. Not everyone in the village is happy about the changes she is trying to make." },
@@ -163,7 +163,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Costume Design",
-    icon: "👗",
+    icon: "",
     nominees: [
       { title: "Avatar: Fire and Ash", image: "https://image.tmdb.org/t/p/w500/5bxrxnRaxZooBAxgUVBZ13dpzC7.jpg", description: "Jake Sully and his family are still living on Pandora with the Metkayina clan. After losing their oldest son, they are dealing with grief and trying to stay safe. A dangerous new Na'vi tribe called the Ash People attacks, and the human soldiers come back with even bigger plans. The family gets split up and has to fight to find each other and protect their home." },
       { title: "Frankenstein", image: "https://image.tmdb.org/t/p/w500/g4JtvGlQO7DByTI6frUobqvSL3R.jpg", description: "A scientist builds a living person out of dead body parts. When he sees what he has done, he runs away. The creature is left alone and tries to find someone who will care about him, but people are afraid of how he looks." },
@@ -174,7 +174,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Makeup & Hairstyling",
-    icon: "💄",
+    icon: "",
     nominees: [
       { title: "Frankenstein", image: "https://image.tmdb.org/t/p/w500/g4JtvGlQO7DByTI6frUobqvSL3R.jpg", description: "A scientist builds a living person out of dead body parts. When he sees what he has done, he runs away. The creature is left alone and tries to find someone who will care about him, but people are afraid of how he looks." },
       { title: "Kokuho", image: "https://image.tmdb.org/t/p/w500/egDmNUBcSvu6aqQPCfyd1UneCYr.jpg", description: "After his yakuza father dies, a teenage boy named Kikuo is taken in by a famous kabuki actor. He and the actor's son Shunsuke both train to perform on stage. Over fifty years, they push each other to get better while dealing with rivalry, friendship, and what it means to give your whole life to your art." },
@@ -185,7 +185,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Production Design",
-    icon: "🏛️",
+    icon: "",
     nominees: [
       { title: "Frankenstein", image: "https://image.tmdb.org/t/p/w500/g4JtvGlQO7DByTI6frUobqvSL3R.jpg", description: "A scientist builds a living person out of dead body parts. When he sees what he has done, he runs away. The creature is left alone and tries to find someone who will care about him, but people are afraid of how he looks." },
       { title: "Hamnet", image: "https://image.tmdb.org/t/p/w500/61xMzN4h8iLk0hq6oUzr9Ts6GE9.jpg", description: "The wife of William Shakespeare raises their children while he works far away in London. When their young son Hamnet gets sick, the family has to deal with a loss that changes them forever. Set in England in the 1590s." },
@@ -196,7 +196,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Sound",
-    icon: "🔊",
+    icon: "",
     nominees: [
       { title: "Frankenstein", image: "https://image.tmdb.org/t/p/w500/g4JtvGlQO7DByTI6frUobqvSL3R.jpg", description: "A scientist builds a living person out of dead body parts. When he sees what he has done, he runs away. The creature is left alone and tries to find someone who will care about him, but people are afraid of how he looks." },
       { title: "F1", image: "https://image.tmdb.org/t/p/w500/vqBmyAj0Xm9LnS1xe1MSlMAJyHq.jpg", description: "A race car driver who stopped racing a long time ago comes back to Formula 1 to help a younger driver learn. Together they try to win against the best teams in the world. Parts of the movie were filmed at real races." },
@@ -207,7 +207,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Film Editing",
-    icon: "✂️",
+    icon: "",
     nominees: [
       { title: "F1", image: "https://image.tmdb.org/t/p/w500/vqBmyAj0Xm9LnS1xe1MSlMAJyHq.jpg", description: "A race car driver who stopped racing a long time ago comes back to Formula 1 to help a younger driver learn. Together they try to win against the best teams in the world. Parts of the movie were filmed at real races." },
       { title: "Marty Supreme", image: "https://image.tmdb.org/t/p/w500/firAhZA0uQvRL2slp7v3AnOj0ZX.jpg", description: "Based on a real person named Marty Reisman who was one of the best ping-pong players in New York City in the 1950s. He spent his days playing in small clubs around the city, going up against anyone who would challenge him." },
@@ -218,7 +218,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Cinematography",
-    icon: "📷",
+    icon: "",
     nominees: [
       { title: "Frankenstein", image: "https://image.tmdb.org/t/p/w500/g4JtvGlQO7DByTI6frUobqvSL3R.jpg", description: "A scientist builds a living person out of dead body parts. When he sees what he has done, he runs away. The creature is left alone and tries to find someone who will care about him, but people are afraid of how he looks." },
       { title: "Marty Supreme", image: "https://image.tmdb.org/t/p/w500/firAhZA0uQvRL2slp7v3AnOj0ZX.jpg", description: "Based on a real person named Marty Reisman who was one of the best ping-pong players in New York City in the 1950s. He spent his days playing in small clubs around the city, going up against anyone who would challenge him." },
@@ -229,7 +229,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Visual Effects",
-    icon: "✨",
+    icon: "",
     nominees: [
       { title: "Avatar: Fire and Ash", image: "https://image.tmdb.org/t/p/w500/5bxrxnRaxZooBAxgUVBZ13dpzC7.jpg", description: "Jake Sully and his family are still living on Pandora with the Metkayina clan. After losing their oldest son, they are dealing with grief and trying to stay safe. A dangerous new Na'vi tribe called the Ash People attacks, and the human soldiers come back with even bigger plans. The family gets split up and has to fight to find each other and protect their home." },
       { title: "F1", image: "https://image.tmdb.org/t/p/w500/vqBmyAj0Xm9LnS1xe1MSlMAJyHq.jpg", description: "A race car driver who stopped racing a long time ago comes back to Formula 1 to help a younger driver learn. Together they try to win against the best teams in the world. Parts of the movie were filmed at real races." },
@@ -240,7 +240,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Live Action Short",
-    icon: "🎞️",
+    icon: "",
     nominees: [
       { title: "A Friend of Dorothy", image: "https://image.tmdb.org/t/p/w500/5YjFZoCfBJ2G40SHPa5CFy60jdC.jpg", description: "A lonely old widow named Dorothy lives alone and spends her days doing crosswords and taking pills. When a seventeen-year-old boy named JJ kicks his football into her garden, they become friends. Even though they seem very different, they find out they have a lot in common and help each other in ways they did not expect." },
       { title: "Butcher's Stain", image: "https://image.tmdb.org/t/p/w500/lAcOUxQUFP6lruP8e8nZSFBFjZ1.jpg", description: "Samir is an Arab Israeli who works in a supermarket in Tel Aviv. After hostage posters go missing from the break room, his manager blames him even though he did not do it. With his job on the line and people around him already looking at him differently, Samir has to find a way to clear his name." },
@@ -251,7 +251,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Animated Short",
-    icon: "🦋",
+    icon: "",
     nominees: [
       { title: "Butterfly", image: "https://image.tmdb.org/t/p/w500/24rb1DaPwGTolrXzC0qOSicm5zr.jpg", description: "Based on the true story of Alfred Nakache, a Jewish French swimmer who competed in the 1936 Olympics in Nazi Germany. During the war, he was sent to Auschwitz where he lost his wife and daughter. The film shows him swimming as memories from his life come back to him." },
       { title: "Forevergreen", image: "https://image.tmdb.org/t/p/w500/7U38zSz4f6OOcHUpi5dJQfMcSw6.jpg", description: "A young bear cub who has lost his parents finds a home with a big, caring tree in the forest. The two become close, but when the cub discovers trash left by humans, he is drawn to it and starts wandering away. He has to learn what really matters before it is too late." },
@@ -262,7 +262,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Documentary Short",
-    icon: "📹",
+    icon: "",
     nominees: [
       { title: "All the Empty Rooms", image: "https://image.tmdb.org/t/p/w500/38odJEJiluUBLI58tO6oTmv5wZl.jpg", description: "A reporter and a photographer spend seven years visiting the bedrooms of children who were killed in school shootings across the United States. The rooms are still filled with toys, posters, and personal things left behind. The families open their doors and share their stories." },
       { title: "Armed Only with a Camera", image: "https://image.tmdb.org/t/p/w500/1vG68YrQGAEnCQooXrEvJ2eparK.jpg", description: "Brent Renaud was an American filmmaker and journalist who spent years covering wars and crises around the world with his brother Craig. In 2022, while reporting on the war in Ukraine, Brent was shot and killed by Russian soldiers. His brother finished this film about Brent's life and the work he left behind." },
@@ -273,7 +273,7 @@ export const categories: Category[] = [
   },
   {
     name: "Best Casting",
-    icon: "🎯",
+    icon: "",
     nominees: [
       { title: "Hamnet", image: "https://image.tmdb.org/t/p/w500/61xMzN4h8iLk0hq6oUzr9Ts6GE9.jpg", description: "The wife of William Shakespeare raises their children while he works far away in London. When their young son Hamnet gets sick, the family has to deal with a loss that changes them forever. Set in England in the 1590s." },
       { title: "Marty Supreme", image: "https://image.tmdb.org/t/p/w500/firAhZA0uQvRL2slp7v3AnOj0ZX.jpg", description: "Based on a real person named Marty Reisman who was one of the best ping-pong players in New York City in the 1950s. He spent his days playing in small clubs around the city, going up against anyone who would challenge him." },
