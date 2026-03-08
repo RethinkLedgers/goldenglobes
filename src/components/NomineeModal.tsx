@@ -25,7 +25,7 @@ export default function NomineeModal({ nominee, categoryName, onClose }: Nominee
   // Reset image error when nominee changes
   useEffect(() => {
     setImageError(false);
-  }, [nominee.title]);
+  }, [nominee.id]);
 
   const handleClose = () => {
     setIsVisible(false);
@@ -56,12 +56,19 @@ export default function NomineeModal({ nominee, categoryName, onClose }: Nominee
           </svg>
         </button>
 
+        {/* Winner Badge */}
+        {nominee.winner && (
+          <div className="absolute top-3 left-3 z-10 px-3 py-1 rounded-full bg-[var(--gold)] text-black text-xs uppercase tracking-wider font-medium">
+            🏆 Winner
+          </div>
+        )}
+
         {/* Image */}
         <div className="relative w-full aspect-[2/3] overflow-hidden rounded-t-xl sm:rounded-t-xl">
           {nominee.image && !imageError ? (
             <Image
               src={nominee.image}
-              alt={nominee.title}
+              alt={nominee.name}
               fill
               className="object-cover"
               onError={() => setImageError(true)}
@@ -69,8 +76,8 @@ export default function NomineeModal({ nominee, categoryName, onClose }: Nominee
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-[#1a1a0a] to-[#0d0d0d] flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full border border-[var(--gold-dark)]/30 flex items-center justify-center">
-                <span className="text-xs text-[var(--gold-dark)] tracking-wider uppercase">TBA</span>
+              <div className="w-20 h-20 rounded-full border border-[var(--gold-dark)]/30 flex items-center justify-center">
+                <span className="text-3xl">{nominee.winner ? '🏆' : '👤'}</span>
               </div>
             </div>
           )}
@@ -83,18 +90,28 @@ export default function NomineeModal({ nominee, categoryName, onClose }: Nominee
             {categoryName}
           </p>
           <h2 className="font-serif text-xl font-medium text-white mb-1">
-            {nominee.title}
+            {nominee.name}
           </h2>
-          {nominee.details && (
-            <p className="text-sm text-[var(--gold)] opacity-80 mb-3">{nominee.details}</p>
+          {nominee.project && (
+            <p className="text-sm text-[var(--gold)] opacity-80 mb-1">{nominee.project}</p>
+          )}
+          {nominee.role && (
+            <p className="text-sm text-gray-400 mb-4">as {nominee.role}</p>
           )}
 
-          {/* Description */}
-          {nominee.description && (
-            <p className="text-sm text-gray-400 leading-relaxed mb-5">
-              {nominee.description}
-            </p>
-          )}
+          {/* Badges */}
+          <div className="flex flex-wrap gap-2 mt-4">
+            {nominee.winner && (
+              <span className="px-3 py-1 rounded-full text-xs bg-[var(--gold)]/20 text-[var(--gold)]">
+                Golden Globe Winner
+              </span>
+            )}
+            {nominee.firstTimeWinner && (
+              <span className="px-3 py-1 rounded-full text-xs bg-white/10 text-white">
+                First-Time Winner
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>

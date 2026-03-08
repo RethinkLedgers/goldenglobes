@@ -67,17 +67,20 @@ export default function CategoryCard({ category, index, isLiveMode = false }: Ca
                 ? "bg-gradient-to-b from-transparent via-[var(--gold-bright)] to-transparent"
                 : "bg-gradient-to-b from-transparent via-[var(--gold)] to-transparent"
             }`} />
-            <div className="text-left">
-              <h2
-                className={`font-serif text-base font-medium tracking-wide transition-colors duration-500 ${
-                  isLiveMode ? "text-white" : "text-white/90"
-                }`}
-              >
-                {category.name}
-              </h2>
-              <p className="text-xs text-gray-500 tracking-wider mt-0.5">
-                {category.nominees.length} NOMINEES
-              </p>
+            <div className="flex items-center gap-3">
+              <span className="text-xl">{category.icon}</span>
+              <div className="text-left">
+                <h2
+                  className={`font-serif text-base font-medium tracking-wide transition-colors duration-500 ${
+                    isLiveMode ? "text-white" : "text-white/90"
+                  }`}
+                >
+                  {category.name}
+                </h2>
+                <p className="text-xs text-gray-500 tracking-wider mt-0.5">
+                  {category.nominees.length} NOMINEES
+                </p>
+              </div>
             </div>
           </div>
           <div
@@ -91,6 +94,21 @@ export default function CategoryCard({ category, index, isLiveMode = false }: Ca
           </div>
         </button>
 
+        {/* Winner Preview */}
+        {category.winner && !isExpanded && (
+          <div className="px-5 pb-4">
+            <div className="flex items-center gap-3 p-3 rounded-lg bg-[var(--gold)]/10 border border-[var(--gold)]/20">
+              <span className="text-lg">🏆</span>
+              <div>
+                <p className="text-[var(--gold)] font-medium text-sm">{category.winner.name}</p>
+                {category.winner.project && (
+                  <p className="text-xs text-gray-500">{category.winner.project}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Nominees Grid */}
         <div
           className={`transition-all duration-500 ease-in-out overflow-hidden ${
@@ -101,7 +119,7 @@ export default function CategoryCard({ category, index, isLiveMode = false }: Ca
           <div className="p-4 grid grid-cols-2 gap-3">
             {category.nominees.map((nominee, idx) => (
               <NomineeCard
-                key={nominee.title}
+                key={nominee.id}
                 nominee={nominee}
                 index={idx}
                 onClick={() => setSelectedNominee(nominee)}
