@@ -14,8 +14,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "The Oscars - 98th Academy Awards",
-  description: "Official nominees for the 98th Academy Awards. March 15, 2026.",
+  title: "Golden Globes - 83rd Golden Globe Awards",
+  description: "Official nominees for the 83rd Golden Globe Awards.",
 };
 
 export const viewport: Viewport = {

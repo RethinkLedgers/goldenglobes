@@ -9,12 +9,12 @@ export default function Header() {
       {/* Subtle top light streak */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)]/30 to-transparent" />
 
-      {/* Gold ring decoration with Oscar statuette */}
+      {/* Gold ring decoration with Golden Globe */}
       <div className="relative z-10 flex flex-col items-center">
         <div className="gold-ring flex items-center justify-center mb-6">
           <Image
             src="/oscar-statuette.png"
-            alt="Oscar Statuette"
+            alt="Golden Globe"
             width={50}
             height={125}
             className="object-contain drop-shadow-[0_0_15px_rgba(197,164,78,0.3)]"
@@ -22,14 +22,14 @@ export default function Header() {
           />
         </div>
 
-        {/* THE OSCARS title */}
+        {/* GOLDEN GLOBES title */}
         <h1 className="font-serif text-4xl sm:text-5xl font-light tracking-[0.3em] uppercase shimmer-text mb-2">
-          The Oscars
+          Golden Globes
         </h1>
 
-        {/* 98th subtitle */}
+        {/* 83rd subtitle */}
         <p className="text-[var(--gold-dark)] text-xs tracking-[0.4em] uppercase mb-1">
-          98th Academy Awards
+          83rd Golden Globe Awards
         </p>
 
         {/* Elegant divider */}
