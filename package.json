@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "find-snippets": "npx tsx scripts/find-ceremony-snippets.ts",
+    "extract-snippets": "./scripts/extract-snippets.sh"
   },
   "dependencies": {
     "next": "^16.1.6",
@@ -18,6 +20,7 @@
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "baseline-browser-mapping": "^2.10.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0"
   }
