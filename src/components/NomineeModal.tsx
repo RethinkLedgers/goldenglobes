@@ -1,6 +1,6 @@
 "use client";
 
-import { Nominee, findOtherNominations } from "@/data/nominees";
+import { Nominee } from "@/data/nominees";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -13,7 +13,6 @@ interface NomineeModalProps {
 export default function NomineeModal({ nominee, categoryName, onClose }: NomineeModalProps) {
   const [imageError, setImageError] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const otherNominations = findOtherNominations(nominee.title, categoryName);
 
   useEffect(() => {
     requestAnimationFrame(() => setIsVisible(true));
@@ -71,7 +70,7 @@ export default function NomineeModal({ nominee, categoryName, onClose }: Nominee
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-[#1a1a0a] to-[#0d0d0d] flex items-center justify-center">
               <div className="w-16 h-16 rounded-full border border-[var(--gold-dark)]/30 flex items-center justify-center">
-                <span className="text-xs text-[var(--gold-dark)] tracking-wider uppercase">N/A</span>
+                <span className="text-xs text-[var(--gold-dark)] tracking-wider uppercase">TBA</span>
               </div>
             </div>
           )}
@@ -80,9 +79,10 @@ export default function NomineeModal({ nominee, categoryName, onClose }: Nominee
 
         {/* Content */}
         <div className="p-5 -mt-8 relative">
-          <h2
-            className="font-serif text-xl font-medium text-white mb-1"
-          >
+          <p className="text-[10px] font-medium text-[var(--gold-dark)] uppercase tracking-[0.2em] mb-2">
+            {categoryName}
+          </p>
+          <h2 className="font-serif text-xl font-medium text-white mb-1">
             {nominee.title}
           </h2>
           {nominee.details && (
@@ -94,26 +94,6 @@ export default function NomineeModal({ nominee, categoryName, onClose }: Nominee
             <p className="text-sm text-gray-400 leading-relaxed mb-5">
               {nominee.description}
             </p>
-          )}
-
-          {/* Other Nominations */}
-          {otherNominations.length > 0 && (
-            <div className="pt-4">
-              <div className="gold-divider mb-4" />
-              <h3 className="text-[10px] font-medium text-[var(--gold-dark)] uppercase tracking-[0.2em] mb-3">
-                Other Nominations
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {otherNominations.map((cat) => (
-                  <span
-                    key={cat}
-                    className="inline-flex items-center px-3 py-1.5 rounded text-[11px] tracking-wide text-[var(--gold-light)] bg-[var(--gold)]/[0.07] border border-[var(--gold-dark)]/20"
-                  >
-                    {cat}
-                  </span>
-                ))}
-              </div>
-            </div>
           )}
         </div>
       </div>

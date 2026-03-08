@@ -14,8 +14,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Golden Globes - 83rd Golden Globe Awards",
-  description: "Official nominees for the 83rd Golden Globe Awards.",
+  title: "Golden Globes - 83rd Annual Golden Globe Awards",
+  description: "Official nominees for the 83rd Golden Globe Awards. Celebrating excellence in film and television. January 2026 on CBS.",
 };
 
 export const viewport: Viewport = {
